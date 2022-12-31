@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ArrayList
 {
-    public class ArrayList<T>
+    public class ListOld<T>
     {
-        private T?[] ArrayList1 = new T[100000000000];
-        private T?[] ArrayList2;
+        private T[] ArrayList1 = new T[100000000000];
+        private T[] ArrayList2;
         private int length = 0;
         public int Length
         {
@@ -18,11 +19,11 @@ namespace ArrayList
                 return length;
             }
         }
-        public T? this[int index]
+        public T this[int index]
         {
             get
             {
-                if (index > Length)
+                if (index >= Length)
                 {
                     throw new Exception(@"Index was out of range. Must be non-negative and less than the size of the collection.Parameter name: index");
                 }
@@ -33,7 +34,7 @@ namespace ArrayList
             }
             set
             {
-                if (index > Length)
+                if (index >= Length)
                 {
                     throw new Exception(@"Index was out of range. Must be non-negative and less than the size of the collection.Parameter name: index");
                 }
@@ -51,7 +52,35 @@ namespace ArrayList
             }
         }
 
-        public void Add(T? Param)
+
+
+        // Sets or Gets the element at the given index.
+        public T this[int index]
+        {
+            get
+            {
+                // Following trick can reduce the range check by one
+                if ((uint)index >= (uint)_size)
+                {
+                    ThrowHelper.ThrowArgumentOutOfRange_IndexException();
+                }
+                return _items[index];
+            }
+
+            set
+            {
+                if ((uint)index >= (uint)_size)
+                {
+                    ThrowHelper.ThrowArgumentOutOfRange_IndexException();
+                }
+                _items[index] = value;
+                _version++;
+            }
+        }
+
+
+
+        public void Add(T Param)
         {
             if (Length == ArrayList1.Length)
             {
@@ -72,11 +101,11 @@ namespace ArrayList
                 ArrayList1[Length - 1] = Param;
             }
         }
-        public void AddRange(params T?[] Params)
+        public void AddRange(params T[] Params)
         {
             if (Length == ArrayList1.Length)
             {
-                ArrayList2 = new T?[2000000];
+                ArrayList2 = new T[2000000];
                 ArrayList1.CopyTo(ArrayList2, 0);
                 for (int i = 0; i < Params.Length; i++)
                 {
@@ -103,15 +132,58 @@ namespace ArrayList
         }
 
 
-        public void Remove(T? Param)
+        public void Remove(T Param)
         {
 
         }
-        public void RemoveRange(params T?[] Params)
+        public void RemoveRange(params T[] Params)
         {
 
         }
     }
 
+
+
+    public class List<T>
+    {
+        internal T[] ArrayList;
+        internal int length = 0;
+        public int Length
+        {
+            get
+            {
+                return length;
+            }
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                if (index >= Length)
+                {
+                    throw new Exception(@"Index was out of range. Must be non-negative and less than the size of the collection.Parameter name: index");
+                }
+                else
+                {
+                    return ArrayList[index];
+                }
+            }
+            set
+            {
+                if (index >= Length)
+                {
+                    throw new Exception(@"Index was out of range. Must be non-negative and less than the size of the collection.Parameter name: index");
+                }
+                else
+                {
+                    ArrayList[index] = value;
+                }
+            }
+        }
+
+
+
+    }
 
 }
